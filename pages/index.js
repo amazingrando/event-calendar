@@ -1,22 +1,25 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
-import { supabase } from './../lib/supabaseClient';
+import Head from 'next/head';
+import { Inter } from '@next/font/google';
+import { supabase } from '../lib/supabaseClient';
 import Header from '../components/header';
-const inter = Inter({ subsets: ['latin'] })
-import Example from '../components/example';
+import EventList from '../components/EventList';
+
+const inter = Inter({ subsets: ['latin'] });
+
 export async function getServerSideProps() {
-  let { data } = await supabase.from('events').select()
+  const { data } = await supabase
+    .from('events')
+    .select()
+    .order('start_date', { ascending: true });
 
   return {
     props: {
-      events: data
+      events: data,
     },
-  }
+  };
 }
 
-export default function Home({events}) {
+export default function Home({ events }) {
   return (
     <>
       <Head>
@@ -25,9 +28,28 @@ export default function Home({events}) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {console.log('events',events)}
-      <Header/>
-      <Example/>
+      <Header />
+      <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11">
+        <div className="sm:flex sm:items-center">
+          <div className="sm:flex-auto">
+            <h1 className="text-4xl font-semibold text-white">Events</h1>
+            <p className="mt-2 text-sm text-white">
+              A list of all the users in your account including their name,
+              title, email and role.
+            </p>
+          </div>
+          <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+            >
+              Add Event
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <EventList events={events} />
     </>
-  )
+  );
 }
