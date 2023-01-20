@@ -6,7 +6,7 @@ import { faPaperPlane } from '@fortawesome/sharp-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
 
-export default function Example({ open }) {
+export default function LoginModal({ open }) {
   const [isOpen, setIsOpen] = useState(open);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
@@ -189,6 +189,6 @@ export default function Example({ open }) {
   );
 }
 
-Example.propTypes = {
+LoginModal.propTypes = {
   open: PropTypes.bool,
 };

@@ -13,7 +13,7 @@ const Pattern = () => {
     let i = 0;
 
     while (i <= randomNumberOfBlocks) {
-      const randomBlock = randomIntFromInterval(1, blocksArray.length);
+      const randomBlock = randomIntFromInterval(2, blocksArray.length);
       blocksArray[randomBlock].classList.add('fill-leafyGreen-dark');
       i += 1;
     }

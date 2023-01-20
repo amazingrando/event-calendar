@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useState, useContext } from 'react';
-import Modal from './Modal';
+import LoginModal from './LoginModal';
 import Pattern from './Pattern';
 import { AuthContext } from '../lib/context/Auth';
 import Logo from '../assets/logo.svg';
@@ -62,7 +62,7 @@ export default function Header() {
                 >
                   Sign in
                 </button>
-                <Modal open={modalOpen} onClickFunc={handleModalClick} />
+                <LoginModal open={modalOpen} onClickFunc={handleModalClick} />
               </>
             ) : (
               <div

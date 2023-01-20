@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import Header from '../components/header';
 import EventList from '../components/EventList';
 import Auth from '../lib/context/Auth';
-import AddEvent from '../components/AddEvent';
+import AddEventButton from '../components/AddEventButton';
 
 export async function getServerSideProps() {
   const { data } = await supabase
@@ -39,7 +39,7 @@ export default function Home({ events }) {
             </p>
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <AddEvent />
+            <AddEventButton />
           </div>
         </div>
       </div>
