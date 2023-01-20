@@ -3,6 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/sharp-solid-svg-icons';
+import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
 
 export default function Example({ open }) {
@@ -187,3 +188,7 @@ export default function Example({ open }) {
     </Transition.Root>
   );
 }
+
+Example.propTypes = {
+  open: PropTypes.bool,
+};

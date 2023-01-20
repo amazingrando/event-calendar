@@ -1,6 +1,5 @@
 import classNames from 'classnames';
-import { useState, useEffect, useContext } from 'react';
-import Image from 'next/image';
+import { useState, useContext } from 'react';
 import Modal from './Modal';
 import Pattern from './Pattern';
 import { AuthContext } from '../lib/context/Auth';
@@ -14,6 +13,9 @@ const navigation = [
 
 export default function Header() {
   const auth = useContext(AuthContext);
+  // eslint-disable-next-line react/destructuring-assignment
+  const userEmail = auth ? auth.user.email : null;
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModal = () => {
@@ -24,16 +26,12 @@ export default function Header() {
     setModalOpen((current) => !current);
   };
 
-  useEffect(() => {
-    console.log('auth effect', auth);
-  }, [auth]);
-
   return (
     <header className="bg-leafyGreen-dark relative">
       <nav className="mx-auto max-w-7xl px-6 lg:px-8" aria-label="Top">
         <div className="flex w-full items-center justify-between border-b border-indigo-500 py-6 lg:border-none">
           <div className="flex items-center">
-            <a href="#">
+            <a href="https://fourkitchens.com">
               <span className="sr-only">Four Kitchens</span>
               <Logo />
             </a>
@@ -50,19 +48,29 @@ export default function Header() {
             </div>
           </div>
           <div className="ml-10 space-x-4">
-            <button
-              type="button"
-              onClick={handleModal}
-              className={classNames(
-                'inline-block py-2 px-4',
-                'border border-kitchensKelly border-solid',
-                'text-base font-medium text-white',
-                'hover:bg-leafyGreen-light'
-              )}
-            >
-              Sign in
-            </button>
-            <Modal open={modalOpen} onClickFunc={handleModalClick} />
+            {!userEmail ? (
+              <>
+                <button
+                  type="button"
+                  onClick={handleModal}
+                  className={classNames(
+                    'inline-block py-2 px-4',
+                    'border border-kitchensKelly border-solid',
+                    'text-base font-medium text-white',
+                    'hover:bg-leafyGreen-light'
+                  )}
+                >
+                  Sign in
+                </button>
+                <Modal open={modalOpen} onClickFunc={handleModalClick} />
+              </>
+            ) : (
+              <div
+                className={classNames('text-base font-medium text-white/70')}
+              >
+                {userEmail}
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-x-6 py-4 lg:hidden">

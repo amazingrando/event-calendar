@@ -4,6 +4,9 @@ import {
   faCalendar,
   faArrowUpRightFromSquare,
 } from '@fortawesome/sharp-solid-svg-icons';
+import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { supabase } from '../lib/supabaseClient';
 
 const dayjs = require('dayjs');
 
@@ -22,7 +25,41 @@ function dateFormat(startDate, endDate) {
   return start + end + year;
 }
 
-export default function EventList({ events }) {
+const Category = ({ id, categories }) => {
+  const found = categories.find((v) => v.id === Number(id));
+
+  return (
+    <div
+      className={classNames(
+        'inline-flex items-center rounded-full',
+        'bg-kitchensKelly px-3 py-0.5 pb-1 text-sm uppercase text-white'
+      )}
+    >
+      {found && found.title}
+    </div>
+  );
+};
+
+Category.propTypes = {
+  id: PropTypes.string,
+  categories: PropTypes.array,
+};
+
+const EventList = ({ events }) => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const { data } = await supabase
+        .from('categories')
+        .select()
+        .order('id', { ascending: true });
+
+      setCategories(data);
+    };
+    getCategories();
+  }, []);
+
   return (
     <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11">
       <div className="mt-8 flex flex-col">
@@ -58,7 +95,7 @@ export default function EventList({ events }) {
                       scope="col"
                       className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-bold uppercase text-leafyGreen backdrop-blur backdrop-filter"
                     >
-                      Submitted by
+                      Categories
                     </th>
                     <th
                       scope="col"
@@ -125,12 +162,21 @@ export default function EventList({ events }) {
                           'whitespace-nowrap px-3 py-4 text-sm text-leafyGreen'
                         )}
                       >
-                        <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-800">
-                          person.role
-                        </span>
-                        <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-0.5 text-sm font-medium text-red-800">
-                          person.role
-                        </span>
+                        {event.categories ? (
+                          <div className="flex flex-row gap-1">
+                            {event.categories.map((category) => (
+                              <Category
+                                id={category}
+                                categories={categories}
+                                key={category}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-gray-500">
+                            No categories found.
+                          </span>
+                        )}
                       </td>
                       <td
                         className={classNames(
@@ -163,4 +209,10 @@ export default function EventList({ events }) {
       </div>
     </div>
   );
-}
+};
+
+EventList.propTypes = {
+  events: PropTypes.array,
+};
+
+export default EventList;

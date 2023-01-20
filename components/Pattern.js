@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 
 const Pattern = () => {
-  console.log('pattern');
-
   function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
@@ -11,7 +9,6 @@ const Pattern = () => {
     const blocks = document.querySelectorAll('.pattern .block');
     const blocksArray = Array.from(blocks);
     const randomNumberOfBlocks = Math.floor(Math.random() * 11);
-    console.log('randomNumberOfBlocks', randomNumberOfBlocks);
 
     let i = 0;
 
