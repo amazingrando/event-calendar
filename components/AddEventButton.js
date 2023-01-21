@@ -1,9 +1,9 @@
 import classNames from 'classnames';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import AddEventModal from './AddEventModal';
 
 const AddEvent = () => {
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleModal = () => {
     setModalOpen((current) => !current);

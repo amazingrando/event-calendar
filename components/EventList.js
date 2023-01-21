@@ -4,9 +4,10 @@ import {
   faCalendar,
   faArrowUpRightFromSquare,
 } from '@fortawesome/sharp-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
+import { NewContentContext } from '../lib/context/NewContentAdded';
 
 const dayjs = require('dayjs');
 
@@ -45,10 +46,33 @@ Category.propTypes = {
   categories: PropTypes.array,
 };
 
-const EventList = ({ events }) => {
+const EventList = () => {
+  const { newContentAvailable } = useContext(NewContentContext);
   const [categories, setCategories] = useState([]);
+  const [events, setEvents] = useState('');
 
   useEffect(() => {
+    const getEvents = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select()
+          .order('start_date', { ascending: true });
+        if (error) {
+          throw error;
+        }
+        setEvents(data);
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    getEvents();
+
+    if (newContentAvailable) {
+      getEvents();
+    }
+
     const getCategories = async () => {
       const { data } = await supabase
         .from('categories')
@@ -58,7 +82,7 @@ const EventList = ({ events }) => {
       setCategories(data);
     };
     getCategories();
-  }, []);
+  }, [newContentAvailable]);
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11">
@@ -106,101 +130,104 @@ const EventList = ({ events }) => {
                   </tr>
                 </thead>
                 <tbody className="bg-whippedCream">
-                  {events.map((event, eventIdx) => (
-                    <tr
-                      key={event.title + eventIdx}
-                      className={
-                        eventIdx % 2 === 0 ? undefined : 'bg-whippedCream-dark'
-                      }
-                    >
-                      <td
-                        className={classNames(
-                          eventIdx !== events.length - 1
-                            ? 'border-b border-gray-200'
-                            : '',
-                          'whitespace-nowrap py-4 pl-4 pr-3 font-semibold text-leafyGreen sm:pl-6 lg:pl-8'
-                        )}
+                  {events &&
+                    events.map((event, eventIdx) => (
+                      <tr
+                        key={event.title + eventIdx}
+                        className={
+                          eventIdx % 2 === 0
+                            ? undefined
+                            : 'bg-whippedCream-dark'
+                        }
                       >
-                        <span className="text-xl">{event.title}</span>
-                      </td>
-                      <td
-                        className={classNames(
-                          eventIdx !== events.length - 1
-                            ? 'border-b border-gray-200'
-                            : '',
-                          'whitespace-nowrap px-3 py-4 text-lg text-leafyGreen'
-                        )}
-                      >
-                        {dateFormat(event.start_date, event.end_date)}
-                      </td>
-                      <td
-                        className={classNames(
-                          eventIdx !== events.length - 1
-                            ? 'border-b border-gray-200'
-                            : '',
-                          'whitespace-nowrap px-3 py-4 text-sm text-ellipsis overflow-hidden'
-                        )}
-                      >
-                        {event.url && (
-                          <Link
-                            href={event.url}
-                            className="text-kitchensKelly-dark underline"
-                          >
-                            {event.url}
-                            <FontAwesomeIcon
-                              icon={faArrowUpRightFromSquare}
-                              className="ml-1"
-                            />
-                          </Link>
-                        )}
-                      </td>
-                      <td
-                        className={classNames(
-                          eventIdx !== events.length - 1
-                            ? 'border-b border-gray-200'
-                            : '',
-                          'whitespace-nowrap px-3 py-4 text-sm text-leafyGreen'
-                        )}
-                      >
-                        {event.categories ? (
-                          <div className="flex flex-row gap-1">
-                            {event.categories.map((category) => (
-                              <Category
-                                id={category}
-                                categories={categories}
-                                key={category}
-                              />
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-gray-500">
-                            No categories found.
-                          </span>
-                        )}
-                      </td>
-                      <td
-                        className={classNames(
-                          eventIdx !== events.length - 1
-                            ? 'border-b border-gray-200'
-                            : '',
-                          'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
-                        )}
-                      >
-                        <button
-                          type="button"
+                        <td
                           className={classNames(
-                            'inline-flex items-center justify-center gap-1',
-                            'border border-kitchensKelly border-solid',
-                            'uppercase font-bold text-leafyGreen',
-                            'px-3 py-1 text-sm',
-                            'hover:bg-kitchensKelly/10'
+                            eventIdx !== events.length - 1
+                              ? 'border-b border-gray-200'
+                              : '',
+                            'whitespace-nowrap py-4 pl-4 pr-3 font-semibold text-leafyGreen sm:pl-6 lg:pl-8'
                           )}
                         >
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                          <span className="text-xl">{event.title}</span>
+                        </td>
+                        <td
+                          className={classNames(
+                            eventIdx !== events.length - 1
+                              ? 'border-b border-gray-200'
+                              : '',
+                            'whitespace-nowrap px-3 py-4 text-lg text-leafyGreen'
+                          )}
+                        >
+                          {dateFormat(event.start_date, event.end_date)}
+                        </td>
+                        <td
+                          className={classNames(
+                            eventIdx !== events.length - 1
+                              ? 'border-b border-gray-200'
+                              : '',
+                            'whitespace-nowrap px-3 py-4 text-sm text-ellipsis overflow-hidden'
+                          )}
+                        >
+                          {event.url && (
+                            <Link
+                              href={event.url}
+                              className="text-kitchensKelly-dark underline"
+                            >
+                              {event.url}
+                              <FontAwesomeIcon
+                                icon={faArrowUpRightFromSquare}
+                                className="ml-1"
+                              />
+                            </Link>
+                          )}
+                        </td>
+                        <td
+                          className={classNames(
+                            eventIdx !== events.length - 1
+                              ? 'border-b border-gray-200'
+                              : '',
+                            'whitespace-nowrap px-3 py-4 text-sm text-leafyGreen'
+                          )}
+                        >
+                          {event.categories ? (
+                            <div className="flex flex-row gap-1">
+                              {event.categories.map((category) => (
+                                <Category
+                                  id={category}
+                                  categories={categories}
+                                  key={category}
+                                />
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-gray-500">
+                              No categories found.
+                            </span>
+                          )}
+                        </td>
+                        <td
+                          className={classNames(
+                            eventIdx !== events.length - 1
+                              ? 'border-b border-gray-200'
+                              : '',
+                            'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
+                          )}
+                        >
+                          <button
+                            type="button"
+                            className={classNames(
+                              'inline-flex items-center justify-center gap-1',
+                              'border border-kitchensKelly border-solid',
+                              'uppercase font-bold text-leafyGreen',
+                              'px-3 py-1 text-sm',
+                              'hover:bg-kitchensKelly/10'
+                            )}
+                          >
+                            Edit
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -209,10 +236,6 @@ const EventList = ({ events }) => {
       </div>
     </div>
   );
-};
-
-EventList.propTypes = {
-  events: PropTypes.array,
 };
 
 export default EventList;
