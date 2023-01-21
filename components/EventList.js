@@ -17,11 +17,16 @@ function classNames(...classes) {
 
 function dateFormat(startDate, endDate) {
   const start = dayjs(startDate).format('MMM D');
-  const end =
-    dayjs(startDate).format('D') !== dayjs(endDate).format('D')
-      ? dayjs(endDate).format(' - D')
-      : '';
-  const year = dayjs(endDate).format(', YYYY');
+  let end;
+  if (endDate) {
+    end =
+      dayjs(startDate).format('D') !== dayjs(endDate).format('D')
+        ? dayjs(endDate).format(' - D')
+        : '';
+  } else {
+    end = '';
+  }
+  const year = dayjs(startDate).format(', YYYY');
 
   return start + end + year;
 }
@@ -106,7 +111,10 @@ const EventList = () => {
                       scope="col"
                       className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-bold uppercase text-leafyGreen backdrop-blur backdrop-filter sm:table-cell"
                     >
-                      <FontAwesomeIcon icon={faCalendar} className="text-sm" />
+                      <FontAwesomeIcon
+                        icon={faCalendar}
+                        className="text-sm mr-1"
+                      />
                       Dates
                     </th>
                     <th
@@ -168,7 +176,7 @@ const EventList = () => {
                             'whitespace-nowrap px-3 py-4 text-sm text-ellipsis overflow-hidden'
                           )}
                         >
-                          {event.url && (
+                          {event.url ? (
                             <Link
                               href={event.url}
                               className="text-kitchensKelly-dark underline"
@@ -179,6 +187,10 @@ const EventList = () => {
                                 className="ml-1"
                               />
                             </Link>
+                          ) : (
+                            <span className="text-gray-500">
+                              No website provided.
+                            </span>
                           )}
                         </td>
                         <td
@@ -201,7 +213,7 @@ const EventList = () => {
                             </div>
                           ) : (
                             <span className="text-gray-500">
-                              No categories found.
+                              No categories provided.
                             </span>
                           )}
                         </td>
