@@ -1,5 +1,7 @@
 import classNames from 'classnames';
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusLarge } from '@fortawesome/sharp-solid-svg-icons';
 import AddEventModal from './AddEventModal';
 
 const AddEvent = () => {
@@ -25,6 +27,10 @@ const AddEvent = () => {
         )}
         onClick={handleModal}
       >
+        <FontAwesomeIcon
+          icon={faPlusLarge}
+          className="relative mr-2 text-kitchensKelly"
+        />
         Add Event
       </button>
       <AddEventModal
