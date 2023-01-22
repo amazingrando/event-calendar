@@ -2,14 +2,14 @@ import { Fragment, useState, useEffect, useContext } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarCirclePlus } from '@fortawesome/sharp-solid-svg-icons';
+import { faCalendarLinesPen } from '@fortawesome/sharp-solid-svg-icons';
 import PropTypes from 'prop-types';
 import sanitizeHtml from 'sanitize-html';
 import { supabase } from '../lib/supabaseClient';
 import { AuthContext } from '../lib/context/Auth';
 import { NewContentContext } from '../lib/context/NewContentAdded';
 
-export default function AddEventModal({ modalOpen, setModalOpen }) {
+export default function EditEventModal({ id, modalOpen, setModalOpen }) {
   const auth = useContext(AuthContext);
   // eslint-disable-next-line react/destructuring-assignment
   const userID = auth ? auth.user.id : null;
@@ -49,7 +49,7 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
     }
   };
 
-  const createEvent = async () => {
+  const updateEvent = async () => {
     try {
       const updates = {
         created_by: userID,
@@ -59,7 +59,10 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
         url: website,
       };
 
-      const { error } = await supabase.from('events').upsert(updates);
+      const { error } = await supabase
+        .from('events')
+        .update(updates)
+        .eq('id', id);
       if (error) {
         throw error;
       }
@@ -77,6 +80,28 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
   useEffect(() => {
     setModalOpen(modalOpen);
 
+    const getEventData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select()
+          .eq('id', id);
+        if (error) {
+          throw error;
+        }
+        setEventTitle(data[0].title);
+        setStartDate(data[0].start_date);
+        setWebsite(data[0].url);
+        setEndDate(data[0].end_date);
+
+        areRequiredFieldsEntered();
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    getEventData();
+
     const getCategories = async () => {
       const { data } = await supabase
         .from('categories')
@@ -86,7 +111,7 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
       setCategories(data);
     };
     getCategories();
-  }, [modalOpen, setModalOpen]);
+  }, [areRequiredFieldsEntered, id, modalOpen, setModalOpen]);
 
   return (
     <Transition.Root show={modalOpen} as={Fragment}>
@@ -126,7 +151,7 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
                         as="h3"
                         className="text-4xl font-medium text-gray-900"
                       >
-                        Add Event
+                        Edit Event
                       </Dialog.Title>
                     </div>
                   </div>
@@ -243,7 +268,7 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
 
                     <div>
                       <button
-                        onClick={createEvent}
+                        onClick={updateEvent}
                         className={classNames(
                           'block justify-center whitespace-nowrap w-full mt-9',
                           'bg-kitchensKelly',
@@ -261,10 +286,10 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
                       >
                         <span>
                           <FontAwesomeIcon
-                            icon={faCalendarCirclePlus}
+                            icon={faCalendarLinesPen}
                             className="relative mr-2"
                           />
-                          Add Event
+                          Update Event
                         </span>
                       </button>
                     </div>
@@ -279,7 +304,8 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
   );
 }
 
-AddEventModal.propTypes = {
+EditEventModal.propTypes = {
+  id: PropTypes.number,
   modalOpen: PropTypes.bool,
   setModalOpen: PropTypes.func,
 };

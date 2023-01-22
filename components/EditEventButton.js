@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import { useState } from 'react';
-import AddEventModal from './AddEventModal';
+import PropTypes from 'prop-types';
+import EditEventModal from './EditEventModal';
 
-const AddEvent = () => {
+const EditEventButton = ({ id }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModal = () => {
@@ -18,22 +19,28 @@ const AddEvent = () => {
       <button
         type="button"
         className={classNames(
-          'inline-block py-2 px-4',
+          'inline-flex items-center justify-center gap-1',
           'border border-kitchensKelly border-solid',
-          'text-base font-medium text-white',
-          'hover:bg-leafyGreen-light'
+          'uppercase font-bold text-leafyGreen',
+          'px-3 py-1 text-sm',
+          'hover:bg-kitchensKelly/10'
         )}
         onClick={handleModal}
       >
-        Add Event
+        Edit
       </button>
-      <AddEventModal
+      <EditEventModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         onClickFunc={handleModalClick}
+        id={id}
       />
     </div>
   );
 };
 
-export default AddEvent;
+EditEventButton.propTypes = {
+  id: PropTypes.number,
+};
+
+export default EditEventButton;

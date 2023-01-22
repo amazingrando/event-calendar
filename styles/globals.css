@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.danger-gradient {
+  background: repeating-linear-gradient(
+    -55deg,
+    theme('colors.red.100'),
+    theme('colors.red.100') 20px,
+    theme('colors.red.200') 20px,
+    theme('colors.red.200') 40px
+  );
+}

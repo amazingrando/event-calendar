@@ -3,11 +3,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCalendar,
   faArrowUpRightFromSquare,
+  faArrowsRotate,
 } from '@fortawesome/sharp-solid-svg-icons';
 import { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { supabase } from '../lib/supabaseClient';
 import { NewContentContext } from '../lib/context/NewContentAdded';
+import EditEventButton from './EditEventButton';
+import DeleteEventButton from './DeleteEventButton';
 
 const dayjs = require('dayjs');
 
@@ -52,7 +55,8 @@ Category.propTypes = {
 };
 
 const EventList = () => {
-  const { newContentAvailable } = useContext(NewContentContext);
+  const { newContentAvailable, setNewContentAvailable } =
+    useContext(NewContentContext);
   const [categories, setCategories] = useState([]);
   const [events, setEvents] = useState('');
 
@@ -131,9 +135,27 @@ const EventList = () => {
                     </th>
                     <th
                       scope="col"
-                      className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pr-4 pl-3 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8"
+                      className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pr-4 pl-3 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8 text-right"
                     >
-                      <span className="sr-only">Edit</span>
+                      <button
+                        type="button"
+                        className={classNames(
+                          'inline-flex items-center justify-center gap-1',
+                          'border border-kitchensKelly border-solid',
+                          'uppercase font-bold text-leafyGreen',
+                          'px-3 py-1 text-sm',
+                          'hover:bg-kitchensKelly/10'
+                        )}
+                        onClick={() => {
+                          setNewContentAvailable(true);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faArrowsRotate}
+                          className="text-sm mr-1"
+                        />
+                        Refresh Events
+                      </button>
                     </th>
                   </tr>
                 </thead>
@@ -222,21 +244,13 @@ const EventList = () => {
                             eventIdx !== events.length - 1
                               ? 'border-b border-gray-200'
                               : '',
-                            'relative whitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
+                            'relativewhitespace-nowrap py-4 pr-4 pl-3 text-right text-sm font-medium sm:pr-6 lg:pr-8'
                           )}
                         >
-                          <button
-                            type="button"
-                            className={classNames(
-                              'inline-flex items-center justify-center gap-1',
-                              'border border-kitchensKelly border-solid',
-                              'uppercase font-bold text-leafyGreen',
-                              'px-3 py-1 text-sm',
-                              'hover:bg-kitchensKelly/10'
-                            )}
-                          >
-                            Edit
-                          </button>
+                          <div className="flex flex-row gap-1 place-content-end">
+                            <EditEventButton id={event.id} />
+                            <DeleteEventButton id={event.id} />
+                          </div>
                         </td>
                       </tr>
                     ))}

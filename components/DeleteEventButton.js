@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import { useState } from 'react';
-import AddEventModal from './AddEventModal';
+import PropTypes from 'prop-types';
+import DeleteEventModal from './DeleteEventModal';
 
-const AddEvent = () => {
+const DeleteEventButton = ({ id }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModal = () => {
@@ -18,22 +19,28 @@ const AddEvent = () => {
       <button
         type="button"
         className={classNames(
-          'inline-block py-2 px-4',
-          'border border-kitchensKelly border-solid',
-          'text-base font-medium text-white',
-          'hover:bg-leafyGreen-light'
+          'inline-flex items-center justify-center gap-1',
+          'border border-red-500 border-solid',
+          'uppercase font-bold text-red-500',
+          'px-3 py-1 text-sm',
+          'hover:bg-red-500 hover:text-white'
         )}
         onClick={handleModal}
       >
-        Add Event
+        Delete
       </button>
-      <AddEventModal
+      <DeleteEventModal
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         onClickFunc={handleModalClick}
+        id={id}
       />
     </div>
   );
 };
 
-export default AddEvent;
+DeleteEventButton.propTypes = {
+  id: PropTypes.number,
+};
+
+export default DeleteEventButton;
