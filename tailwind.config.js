@@ -7,6 +7,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ['mundial', 'sans-serif'],
+      fragment: ['PP Fragment', 'sans-serif'],
       pixel: ['lores-12', 'sans-serif'],
     },
     extend: {
@@ -33,5 +34,6 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  // eslint-disable-next-line global-require
+  plugins: [require('@tailwindcss/forms')],
 };

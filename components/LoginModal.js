@@ -117,11 +117,7 @@ export default function LoginModal({ open }) {
                           />
                           <div
                             className={classNames(
-                              'bg-gray-200 px-6 py-2 border border-solid border-gray-300',
-                              {
-                                'bg-kitchensKelly border-kitchensKelly':
-                                  username !== '',
-                              }
+                              'bg-gray-200 px-6 py-2 border border-solid border-gray-300'
                             )}
                           >
                             <span className="whitespace-nowrap">

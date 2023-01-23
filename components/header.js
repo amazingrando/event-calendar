@@ -10,12 +10,6 @@ import { AuthContext } from '../lib/context/Auth';
 import Logo from '../assets/logo.svg';
 import { supabase } from '../lib/supabaseClient';
 
-const navigation = [
-  { name: 'Events', href: '#' },
-  { name: 'How to Use', href: '#' },
-  { name: 'About', href: '#' },
-];
-
 const LogoutPopover = ({ children }) => {
   const handleLogout = async () => {
     try {
@@ -101,15 +95,9 @@ export default function Header() {
               <Logo />
             </a>
             <div className="ml-10 hidden space-x-8 lg:block">
-              {navigation.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-base font-medium text-white hover:text-indigo-50"
-                >
-                  {link.name}
-                </a>
-              ))}
+              <h1 className="text-white text-4xl font-fragment">
+                Events Calendar
+              </h1>
             </div>
           </div>
           <div className="ml-10 space-x-4">
@@ -137,15 +125,9 @@ export default function Header() {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-x-6 py-4 lg:hidden">
-          {navigation.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="text-base font-medium text-white hover:text-indigo-50"
-            >
-              {link.name}
-            </a>
-          ))}
+          <h1 className="text-white text-4xl font-bold">
+            Four Kitchens Events Calendar
+          </h1>
         </div>
       </nav>
       <div className="w-full overflow-hidden">
