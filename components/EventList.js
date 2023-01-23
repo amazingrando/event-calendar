@@ -222,6 +222,10 @@ const EventList = () => {
                           className="text-sm mr-1"
                         />
                         Refresh Events
+                        {console.log(
+                          'newContentAvailable',
+                          newContentAvailable
+                        )}
                       </button>
                     </th>
                   </tr>

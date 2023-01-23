@@ -130,9 +130,6 @@ export default function Header() {
           </h1>
         </div>
       </nav>
-      <div className="w-full overflow-hidden">
-        <Pattern />
-      </div>
     </header>
   );
 }

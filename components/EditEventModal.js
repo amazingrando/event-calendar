@@ -111,7 +111,7 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
       setCategories(data);
     };
     getCategories();
-  }, [areRequiredFieldsEntered, id, modalOpen, setModalOpen]);
+  }, [id, modalOpen, setModalOpen]);
 
   return (
     <Transition.Root show={modalOpen} as={Fragment}>

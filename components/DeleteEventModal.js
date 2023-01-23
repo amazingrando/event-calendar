@@ -38,6 +38,7 @@ export default function DeleteEventModal({ id, modalOpen, setModalOpen }) {
         throw error;
       }
       setNewContentAvailable(true);
+      setModalOpen(false);
     } catch (error) {
       alert(error.message);
     }
