@@ -4,61 +4,70 @@ import {
   faCalendar,
   faArrowUpRightFromSquare,
   faArrowsRotate,
+  faCompass,
+  faTag,
+  faPartyHorn,
 } from '@fortawesome/sharp-solid-svg-icons';
 import { useEffect, useState, useContext } from 'react';
-import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { supabase } from '../lib/supabaseClient';
 import { NewContentContext } from '../lib/context/NewContentAdded';
+import { dateFormat } from '../lib/helpers/dateFormat';
 import EditEventButton from './EditEventButton';
 import DeleteEventButton from './DeleteEventButton';
-
-const dayjs = require('dayjs');
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
-
-function dateFormat(startDate, endDate) {
-  const start = dayjs(startDate).format('MMM D');
-  let end;
-  if (endDate) {
-    end =
-      dayjs(startDate).format('D') !== dayjs(endDate).format('D')
-        ? dayjs(endDate).format(' - D')
-        : '';
-  } else {
-    end = '';
-  }
-  const year = dayjs(startDate).format(', YYYY');
-
-  return start + end + year;
-}
-
-const Category = ({ id, categories }) => {
-  const found = categories.find((v) => v.id === Number(id));
-
-  return (
-    <div
-      className={classNames(
-        'inline-flex items-center rounded-full',
-        'bg-kitchensKelly px-3 py-0.5 pb-1 text-sm uppercase text-white'
-      )}
-    >
-      {found && found.title}
-    </div>
-  );
-};
-
-Category.propTypes = {
-  id: PropTypes.string,
-  categories: PropTypes.array,
-};
+import CategoryBadge from './CategoryBadge';
+import { AuthContext } from '../lib/context/Auth';
+import AddEventButton from './AddEventButton';
 
 const EventList = () => {
+  const auth = useContext(AuthContext);
   const { newContentAvailable, setNewContentAvailable } =
     useContext(NewContentContext);
   const [categories, setCategories] = useState([]);
   const [events, setEvents] = useState('');
+  const [eventsRendered, setEventsRendered] = useState('');
+  const [textSearchValue, setTextSearchValue] = useState('');
+  const [categorySearchValue, setCategorySearchValue] = useState();
+
+  const resetCategorySearchValue = () => {
+    setCategorySearchValue('');
+  };
+
+  const resetTextSearchFilterEvents = () => {
+    setTextSearchValue('');
+  };
+
+  const handleTextSearchFilterEvents = (e) => {
+    resetCategorySearchValue();
+    setTextSearchValue(e.target.value);
+
+    if (e.target.value !== '') {
+      setTextSearchValue(e.target.value);
+
+      const filteredEventList = events.filter((event) =>
+        event.title.includes(textSearchValue)
+      );
+      setEventsRendered(filteredEventList);
+    } else {
+      setEventsRendered(events);
+    }
+  };
+
+  const handleCategoryFilter = (e) => {
+    resetTextSearchFilterEvents();
+    setEventsRendered(events);
+    setCategorySearchValue(e.target.value);
+
+    if (e.target.value !== '') {
+      const filteredEventList = events.filter((event) => {
+        if (!event.categories) return null;
+        return event.categories.find((category) => category === e.target.value);
+      });
+      setEventsRendered(filteredEventList);
+    } else {
+      setEventsRendered(events);
+    }
+  };
 
   useEffect(() => {
     const getEvents = async () => {
@@ -71,6 +80,7 @@ const EventList = () => {
           throw error;
         }
         setEvents(data);
+        setEventsRendered(data);
       } catch (error) {
         alert(error.message);
       }
@@ -86,7 +96,7 @@ const EventList = () => {
       const { data } = await supabase
         .from('categories')
         .select()
-        .order('id', { ascending: true });
+        .order('title', { ascending: true });
 
       setCategories(data);
     };
@@ -94,7 +104,55 @@ const EventList = () => {
   }, [newContentAvailable]);
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11">
+    <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11 w-full">
+      <div className="flex flex-row gap-8 content-center">
+        <div className="block max-w-[500px]">
+          <label
+            htmlFor="search"
+            className="block uppercase text-subhead text-sm font-bold text-white mb-2"
+          >
+            Search for events
+          </label>
+          <input
+            className={classNames(
+              'block w-full appearance-none px-3 py-2 bg-leafyGreen-dark',
+              'text-white',
+              'placeholder:text-muted border border-solid border-kitchensKelly'
+            )}
+            type="text"
+            placeholder="Event name..."
+            onChange={handleTextSearchFilterEvents}
+            value={textSearchValue}
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="categorySelect"
+            className="block uppercase text-subhead text-sm font-bold text-white mb-2"
+          >
+            Choose a category: {categorySearchValue}
+          </label>
+          {categories && (
+            <select
+              name="categorySelect"
+              id="categorySelect"
+              onChange={handleCategoryFilter}
+              value={categorySearchValue}
+              className="bg-leafyGreen-dark text-white border border-solid border-kitchensKelly"
+            >
+              <option value="">Choose...</option>
+              {categories.map((category) => (
+                <option value={category.id} key={category.id}>
+                  {category.title}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+        <div className="ml-auto">
+          <AddEventButton />
+        </div>
+      </div>
       <div className="mt-8 flex flex-col">
         <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle">
@@ -109,6 +167,10 @@ const EventList = () => {
                       scope="col"
                       className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-bold uppercase text-leafyGreen backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
                     >
+                      <FontAwesomeIcon
+                        icon={faPartyHorn}
+                        className="text-sm mr-1"
+                      />
                       Event Title
                     </th>
                     <th
@@ -125,12 +187,17 @@ const EventList = () => {
                       scope="col"
                       className="sticky top-0 z-10 hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-bold uppercase text-leafyGreen backdrop-blur backdrop-filter lg:table-cell"
                     >
+                      <FontAwesomeIcon
+                        icon={faCompass}
+                        className="text-sm mr-1"
+                      />
                       Website
                     </th>
                     <th
                       scope="col"
                       className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-bold uppercase text-leafyGreen backdrop-blur backdrop-filter"
                     >
+                      <FontAwesomeIcon icon={faTag} className="text-sm mr-1" />
                       Categories
                     </th>
                     <th
@@ -160,8 +227,8 @@ const EventList = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-whippedCream">
-                  {events &&
-                    events.map((event, eventIdx) => (
+                  {eventsRendered &&
+                    eventsRendered.map((event, eventIdx) => (
                       <tr
                         key={event.title + eventIdx}
                         className={
@@ -226,7 +293,7 @@ const EventList = () => {
                           {event.categories ? (
                             <div className="flex flex-row gap-1">
                               {event.categories.map((category) => (
-                                <Category
+                                <CategoryBadge
                                   id={category}
                                   categories={categories}
                                   key={category}
@@ -248,8 +315,12 @@ const EventList = () => {
                           )}
                         >
                           <div className="flex flex-row gap-1 place-content-end">
-                            <EditEventButton id={event.id} />
-                            <DeleteEventButton id={event.id} />
+                            {auth && (
+                              <>
+                                <EditEventButton id={event.id} />
+                                <DeleteEventButton id={event.id} />
+                              </>
+                            )}
                           </div>
                         </td>
                       </tr>

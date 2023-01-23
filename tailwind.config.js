@@ -7,6 +7,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ['mundial', 'sans-serif'],
+      fragment: ['PP Fragment', 'sans-serif'],
       pixel: ['lores-12', 'sans-serif'],
     },
     extend: {
@@ -31,7 +32,11 @@ module.exports = {
           '50%': { opacity: '0' },
         },
       },
+      gridTemplateRows: {
+        layout: '1fr 100% 1fr',
+      },
     },
   },
-  plugins: [],
+  // eslint-disable-next-line global-require
+  plugins: [require('@tailwindcss/forms')],
 };

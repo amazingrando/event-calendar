@@ -12,6 +12,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-pro": "^6.2.1",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-brands-svg-icons": "^6.2.1",
     "@fortawesome/pro-duotone-svg-icons": "^6.2.1",
     "@fortawesome/pro-light-svg-icons": "^6.2.1",
     "@fortawesome/pro-regular-svg-icons": "^6.2.1",
@@ -24,6 +25,7 @@
     "@next/font": "13.1.1",
     "@supabase/supabase-js": "^2.2.3",
     "@svgr/webpack": "^6.5.1",
+    "@tailwindcss/forms": "^0.5.3",
     "autoprefixer": "^10.4.13",
     "classnames": "^2.3.2",
     "css-doodle": "^0.32.2",

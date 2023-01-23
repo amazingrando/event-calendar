@@ -3,7 +3,7 @@ import Header from '../components/header';
 import EventList from '../components/EventList';
 import Auth from '../lib/context/Auth';
 import NewContentAvailable from '../lib/context/NewContentAdded';
-import AddEventButton from '../components/AddEventButton';
+import Footer from '../components/footer';
 
 export default function Home() {
   return (
@@ -15,23 +15,11 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Header />
-        <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11">
-          <div className="sm:flex sm:items-center">
-            <div className="sm:flex-auto">
-              <h1 className="text-4xl font-semibold text-white">Events</h1>
-              <p className="mt-2 text-sm text-white">
-                A list of all the users in your account including their name,
-                title, email and role.
-              </p>
-            </div>
-            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-              <AddEventButton />
-            </div>
-          </div>
+        <div className="min-h-screen flex flex-col">
+          <Header />
+          <EventList />
+          <Footer />
         </div>
-
-        <EventList />
       </NewContentAvailable>
     </Auth>
   );
