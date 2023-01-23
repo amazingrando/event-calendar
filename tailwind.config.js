@@ -32,6 +32,9 @@ module.exports = {
           '50%': { opacity: '0' },
         },
       },
+      gridTemplateRows: {
+        layout: '1fr 100% 1fr',
+      },
     },
   },
   // eslint-disable-next-line global-require

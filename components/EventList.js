@@ -104,7 +104,7 @@ const EventList = () => {
   }, [newContentAvailable]);
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11">
+    <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11 w-full">
       <div className="flex flex-row gap-8 content-center">
         <div className="block max-w-[500px]">
           <label

@@ -3,6 +3,7 @@ import Header from '../components/header';
 import EventList from '../components/EventList';
 import Auth from '../lib/context/Auth';
 import NewContentAvailable from '../lib/context/NewContentAdded';
+import Footer from '../components/footer';
 
 export default function Home() {
   return (
@@ -14,8 +15,11 @@ export default function Home() {
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Header />
-        <EventList />
+        <div className="min-h-screen flex flex-col">
+          <Header />
+          <EventList />
+          <Footer />
+        </div>
       </NewContentAvailable>
     </Auth>
   );
