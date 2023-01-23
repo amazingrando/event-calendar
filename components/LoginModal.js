@@ -31,7 +31,12 @@ export default function LoginModal({ open }) {
 
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithOtp({ email });
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: window.location.origin,
+        },
+      });
       setLoginEmailSent(true);
       if (error) throw error;
       alert('Check your email for the login link!');
