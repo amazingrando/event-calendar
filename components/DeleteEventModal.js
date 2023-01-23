@@ -110,27 +110,31 @@ export default function DeleteEventModal({ id, modalOpen, setModalOpen }) {
                         Deleting this event cannot be undone.
                       </span>
                     </Dialog.Title>
-                    <div className="mt-2 p-6">
-                      <h2 className="text-3xl mb-1">{eventData.title}</h2>
-                      <p className="text-xl text-slate-500">
-                        {dateFormat(eventData.start_date, eventData.end_date)}
-                      </p>
-                      <p className="text-xl text-slate-500">{eventData.url}</p>
-                      <button
-                        onClick={deleteEvent}
-                        className={classNames(
-                          'block justify-center whitespace-nowrap w-full mt-9',
-                          'bg-red-500 text-white text-xl',
-                          'px-5 py-2',
-                          'uppercase font-bold font-sansDisplay',
-                          'transition ease-in-out',
-                          'hover:bg-red-600'
-                        )}
-                        type="button"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                    {eventData && (
+                      <div className="mt-2 p-6">
+                        <h2 className="text-3xl mb-1">{eventData.title}</h2>
+                        <p className="text-xl text-slate-500">
+                          {dateFormat(eventData.start_date, eventData.end_date)}
+                        </p>
+                        <p className="text-xl text-slate-500">
+                          {eventData.url}
+                        </p>
+                        <button
+                          onClick={deleteEvent}
+                          className={classNames(
+                            'block justify-center whitespace-nowrap w-full mt-9',
+                            'bg-red-500 text-white text-xl',
+                            'px-5 py-2',
+                            'uppercase font-bold font-sansDisplay',
+                            'transition ease-in-out',
+                            'hover:bg-red-600'
+                          )}
+                          type="button"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </Dialog.Panel>
