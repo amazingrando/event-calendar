@@ -8,7 +8,8 @@ const CategoryBadge = ({ id, categories }) => {
     <div
       className={classNames(
         'inline-flex items-center rounded-full',
-        'bg-kitchensKelly px-3 py-0.5 pb-1 text-sm uppercase text-white'
+        'bg-kitchensKelly px-3 py-0.5 pb-1',
+        'text-xs uppercase text-white tracking-wider'
       )}
     >
       {found && found.title}

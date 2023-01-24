@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCalendar,
   faArrowUpRightFromSquare,
-  faArrowsRotate,
   faCompass,
   faTag,
   faPartyHorn,
@@ -90,6 +89,7 @@ const EventList = () => {
 
     if (newContentAvailable) {
       getEvents();
+      setNewContentAvailable(false);
     }
 
     const getCategories = async () => {
@@ -101,7 +101,7 @@ const EventList = () => {
       setCategories(data);
     };
     getCategories();
-  }, [newContentAvailable]);
+  }, [newContentAvailable, setNewContentAvailable]);
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl my-11 w-full">
@@ -204,29 +204,7 @@ const EventList = () => {
                       scope="col"
                       className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pr-4 pl-3 backdrop-blur backdrop-filter sm:pr-6 lg:pr-8 text-right"
                     >
-                      <button
-                        type="button"
-                        className={classNames(
-                          'inline-flex items-center justify-center gap-1',
-                          'border border-kitchensKelly border-solid',
-                          'uppercase font-bold text-leafyGreen',
-                          'px-3 py-1 text-sm',
-                          'hover:bg-kitchensKelly/10'
-                        )}
-                        onClick={() => {
-                          setNewContentAvailable(true);
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faArrowsRotate}
-                          className="text-sm mr-1"
-                        />
-                        Refresh Events
-                        {console.log(
-                          'newContentAvailable',
-                          newContentAvailable
-                        )}
-                      </button>
+                      &nbsp;
                     </th>
                   </tr>
                 </thead>
@@ -321,7 +299,12 @@ const EventList = () => {
                           <div className="flex flex-row gap-1 place-content-end">
                             {auth && (
                               <>
-                                <EditEventButton id={event.id} />
+                                <EditEventButton
+                                  id={event.id}
+                                  setNewContentAvailable={
+                                    setNewContentAvailable
+                                  }
+                                />
                                 <DeleteEventButton id={event.id} />
                               </>
                             )}

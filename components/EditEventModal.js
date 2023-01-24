@@ -8,6 +8,7 @@ import sanitizeHtml from 'sanitize-html';
 import { supabase } from '../lib/supabaseClient';
 import { AuthContext } from '../lib/context/Auth';
 import { NewContentContext } from '../lib/context/NewContentAdded';
+import CategoryCheckbox from './CategoryCheckBox';
 
 export default function EditEventModal({ id, modalOpen, setModalOpen }) {
   const auth = useContext(AuthContext);
@@ -84,11 +85,15 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
     const { id: categoryID, checked } = e.target;
 
     if (checked) {
-      const needleFound = categoriesSelected.find(
-        (category) => category === categoryID
-      );
-      if (!needleFound) {
-        setCategoriesSelected((previous) => [...previous, categoryID]);
+      if (categoriesSelected) {
+        const needleFound = categoriesSelected.find(
+          (category) => category === categoryID
+        );
+        if (!needleFound) {
+          setCategoriesSelected((previous) => [...previous, categoryID]);
+        }
+      } else {
+        setCategoriesSelected([categoryID]);
       }
     } else {
       setCategoriesSelected((previous) => [
@@ -98,15 +103,6 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
   };
 
   useEffect(() => {
-    setModalOpen(modalOpen);
-
-    const checkCategories = () => {
-      // eventCategories.find(
-      //   (item) => parseInt(item) === category.id
-      // )
-      console.log('handleCategoryLoad fired');
-    };
-
     const getEventData = async () => {
       try {
         const { data, error } = await supabase
@@ -121,6 +117,7 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
         setWebsite(data[0].url);
         setEndDate(data[0].end_date);
         setEventCategories(data[0].categories);
+        setCategoriesSelected(data[0].categories);
 
         areRequiredFieldsEntered();
       } catch (error) {
@@ -146,7 +143,9 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
       <Dialog
         as="div"
         className="relative z-10"
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          setModalOpen(false);
+        }}
       >
         <Transition.Child
           as={Fragment}
@@ -270,12 +269,11 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
                         {categories &&
                           categories.map((category) => (
                             <div key={category.title}>
-                              <input
-                                type="checkbox"
+                              <CategoryCheckbox
                                 id={category.id}
-                                name={category.id}
-                                className="hidden peer"
-                                onChange={handleCategoryCheck}
+                                handleCategoryCheck={handleCategoryCheck}
+                                eventCategories={eventCategories}
+                                setNewContentAvailable={setNewContentAvailable}
                               />
                               <label
                                 htmlFor={category.id}
