@@ -22,6 +22,7 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
   const [startDate, setStartDate] = useState('');
   const [website, setWebsite] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [categoriesSelected, setCategoriesSelected] = useState([]);
 
   const handleTitleChange = (e) => {
     setEventTitle(sanitizeHtml(e.target.value));
@@ -57,6 +58,7 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
         start_date: startDate,
         end_date: endDate || null,
         url: website,
+        categories: categoriesSelected,
       };
 
       const { error } = await supabase
@@ -74,6 +76,23 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
       setEndDate('');
     } catch (error) {
       alert(error.message);
+    }
+  };
+
+  const handleCategoryCheck = (e) => {
+    const { id: categoryID, checked } = e.target;
+
+    if (checked) {
+      const needleFound = categoriesSelected.find(
+        (category) => category === categoryID
+      );
+      if (!needleFound) {
+        setCategoriesSelected((previous) => [...previous, categoryID]);
+      }
+    } else {
+      setCategoriesSelected((previous) => [
+        ...previous.filter((item) => item !== categoryID),
+      ]);
     }
   };
 
@@ -244,12 +263,13 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
                             <div key={category.title}>
                               <input
                                 type="checkbox"
-                                id={category.title}
-                                name={category.title}
+                                id={category.id}
+                                name={category.id}
                                 className="hidden peer"
+                                onChange={handleCategoryCheck}
                               />
                               <label
-                                htmlFor={category.title}
+                                htmlFor={category.id}
                                 className={classNames(
                                   'rounded-full',
                                   'bg-whippedCream px-3 py-0.5 pb-1 text-sm uppercase text-leafyGreen',

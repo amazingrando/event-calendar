@@ -22,6 +22,7 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
   const [startDate, setStartDate] = useState('');
   const [website, setWebsite] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [categoriesSelected, setCategoriesSelected] = useState([]);
 
   const handleTitleChange = (e) => {
     setEventTitle(sanitizeHtml(e.target.value));
@@ -57,6 +58,7 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
         start_date: startDate,
         end_date: endDate || null,
         url: website,
+        categories: categoriesSelected,
       };
 
       const { error } = await supabase.from('events').upsert(updates);
@@ -71,6 +73,23 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
       setEndDate('');
     } catch (error) {
       alert(error.message);
+    }
+  };
+
+  const handleCategoryCheck = (e) => {
+    const { id: categoryID, checked } = e.target;
+
+    if (checked) {
+      const needleFound = categoriesSelected.find(
+        (category) => category === categoryID
+      );
+      if (!needleFound) {
+        setCategoriesSelected((previous) => [...previous, categoryID]);
+      }
+    } else {
+      setCategoriesSelected((previous) => [
+        ...previous.filter((item) => item !== categoryID),
+      ]);
     }
   };
 
@@ -216,15 +235,16 @@ export default function AddEventModal({ modalOpen, setModalOpen }) {
                       <div className="flex flex-col gap-2 items-start">
                         {categories &&
                           categories.map((category) => (
-                            <div key={category.title}>
+                            <div key={category.id}>
                               <input
                                 type="checkbox"
-                                id={category.title}
-                                name={category.title}
+                                id={category.id}
+                                name={category.id}
                                 className="hidden peer"
+                                onChange={handleCategoryCheck}
                               />
                               <label
-                                htmlFor={category.title}
+                                htmlFor={category.id}
                                 className={classNames(
                                   'rounded-full',
                                   'bg-whippedCream px-3 py-0.5 pb-1 text-sm uppercase text-leafyGreen',
