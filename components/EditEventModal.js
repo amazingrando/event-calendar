@@ -22,6 +22,7 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
   const [startDate, setStartDate] = useState('');
   const [website, setWebsite] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [eventCategories, setEventCategories] = useState([]);
   const [categoriesSelected, setCategoriesSelected] = useState([]);
 
   const handleTitleChange = (e) => {
@@ -99,6 +100,13 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
   useEffect(() => {
     setModalOpen(modalOpen);
 
+    const checkCategories = () => {
+      // eventCategories.find(
+      //   (item) => parseInt(item) === category.id
+      // )
+      console.log('handleCategoryLoad fired');
+    };
+
     const getEventData = async () => {
       try {
         const { data, error } = await supabase
@@ -112,6 +120,7 @@ export default function EditEventModal({ id, modalOpen, setModalOpen }) {
         setStartDate(data[0].start_date);
         setWebsite(data[0].url);
         setEndDate(data[0].end_date);
+        setEventCategories(data[0].categories);
 
         areRequiredFieldsEntered();
       } catch (error) {
