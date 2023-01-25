@@ -94,7 +94,7 @@ export default function Header() {
               <span className="sr-only">Four Kitchens</span>
               {/* <Logo /> */}
             </a>
-            <div className="ml-10 hidden space-x-8 lg:block">
+            <div className="hidden space-x-8 lg:block">
               <h1 className="text-white text-4xl font-fragment">
                 Events Calendar
               </h1>
