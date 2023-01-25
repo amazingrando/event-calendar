@@ -92,7 +92,7 @@ export default function Header() {
           <div className="flex items-center">
             <a href="https://fourkitchens.com">
               <span className="sr-only">Four Kitchens</span>
-              <Logo />
+              {/* <Logo /> */}
             </a>
             <div className="ml-10 hidden space-x-8 lg:block">
               <h1 className="text-white text-4xl font-fragment">
