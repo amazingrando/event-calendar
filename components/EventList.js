@@ -130,7 +130,7 @@ const EventList = () => {
             htmlFor="categorySelect"
             className="block uppercase text-subhead text-sm font-bold text-white mb-2"
           >
-            Choose a category: {categorySearchValue}
+            Choose a category:
           </label>
           {categories && (
             <select
